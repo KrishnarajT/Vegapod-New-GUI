@@ -16,122 +16,44 @@ from datetime import datetime
 
 class Worker(QObject):
     finished = pyqtSignal()
-    progress = pyqtSignal(list, list, float, int)
+    # progress = pyqtSignal(list, list, float, int)
     gimme_values = pyqtSignal()
 
     def __init__(self, direction_text, step_val, end_val, interval_val):
         super().__init__()
-        if direction_text == 'Forward':
-            self.direction = 1
-        else: self.direction = str(2)
-        
-        self.step_val = str(step_val)
-        self.end_val = str(end_val)
-        self.interval_val = str(interval_val)
+        # Basic variables can be defined here. 
 
     def run(self):
-        print('motor code was invoked. ')
         
-                
-        # s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # s.bind((socket.gethostname(), 1234))
-        # s.listen(5)
-        # clientsocket, address = s.accept()
-        # print(f"connection from {address} has been established!")
-
-        # clientsocket.send(bytes(self.direction, "utf-8"))
-        # time.sleep(0.5)
-        # clientsocket.send(bytes(self.end_val, "utf-8"))
-        # time.sleep(0.5)
-        # clientsocket.send(bytes(self.step_val, "utf-8"))
-        # time.sleep(0.5)
-        # clientsocket.send(bytes(self.interval_val, "utf-8"))
-        # time.sleep(0.5)
-            
-        # s.close()
-        # clientsocket.close
-        # clientsocket.detach
-        # time.sleep(1)        
-        
-        # #Connecting as client
-        # a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # a.connect(('169.254.201.77', 1234))
-        # print(f"connection from {address} has been established AGAIN as client !!!")
-
-        # Take values for approx 20/25 seconds
-        x = time.time()
-        samay = 0
-        while (samay < 7):
-            b = time.time()
-            samay = b - x
-            print("inside recv loop")
-            
-            ### RECEIVING VALUES FROM PI and PARSING JSON
-
-            # Taking data from the PI as a dict. 
-            # raw_data = a.recv(1024)
-            # if not raw_data:
-            #     break;
-            # raw_data = raw_data.decode("utf-8")
-
-            # raw_data = json.loads(raw_data) # is now a dictionary. 
-
-            # accel_data = raw_data['Acceleration']
-            # gyro_data = raw_data['Gyroscope']
-            # rpm_data = raw_data['RPM']
-            # pressure_data = raw_data['Pressure']
-            
-            ### DUMMY VALUES  ###
-            
-            accel_data = [datetime.today().second * 2, datetime.today().second - 1, datetime.today().second]
-            gyro_data = [datetime.today().second * 5, datetime.today().second, datetime.today().second * 7]
-            rpm_data = 5000
-            pressure_data = 100.00
-
-            
-            ### Sending values to GUI for updating ###
-            
-            self.progress.emit(accel_data, gyro_data, pressure_data, rpm_data)
-            time.sleep(0.1)
-            
-            
-            
-        
-        print("Session finished...")
-                
+        # self.progress.emit(accel_data, gyro_data, pressure_data, rpm_data)
+        time.sleep(0.1)                   
         self.finished.emit()
 
     def stop_immediately(self):
-        # Maybe ask the pi to break? 
         print('breaking. ')
-        # self.maybeconnectionserver.close() and b4 that send break. 
         self.finished.emit()
 
-
-
-class Ui_MainWindow(QMainWindow):
+class Ui_MainWindow(QMainWindow): 
+       
     def __init__(self):
         super().__init__()
         self.setObjectName("NEW POD GUI")
         self.resize(1920, 1080)
         self.setupUi()
 
-        # # Defining basic values
-
-        # self.start_value = 1
-        # self.end_value = 20
-        # self.step_value = 5
-        # self.interval = 500
-        
     def runLongTask(self):
-        # Step 2: Create a QThread object
+        
+        # Create a QThread object
         self.thread = QThread()
-        # Step 3: Create a worker object
+        
+        # Create a worker object
         self.worker = Worker(self.direction_combo_box.currentText(), int(self.step_value_line_edit.text()),\
             int(self.end_value_line_edit.text()), int(self.interval_line_edit.text()))
-        # Step 4: Move worker to the thread
+        
+        # Move worker to the thread
         self.worker.moveToThread(self.thread)
-        # Step 5: Connect signals and slots
+        
+        # Connect signals and slots
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
@@ -139,7 +61,8 @@ class Ui_MainWindow(QMainWindow):
         self.worker.progress.connect(self.reportProgress)
         self.worker.gimme_values.connect(self.give_val)
         self.stop_signal.connect(self.worker.stop_immediately)
-        # Step 6: Start the thread
+        
+        # Start the thread
         self.thread.start()
 
         # Final resets
@@ -156,42 +79,6 @@ class Ui_MainWindow(QMainWindow):
     
     def give_val(self):
         return 1
-        
-    def start_pod(self):
-        
-        
-        if 'Forward' == self.direction_combo_box.currentText():
-            self.start_value = 1
-        else: self.start_value = 2
-        
-        self.end_value = self.end_value_line_edit.text()
-        self.step_value = self.step_value_line_edit.text()
-        self.end_value = self.end_value_line_edit.text()
-        self.interval = self.interval_line_edit.text()
-        
-        # Calling the function to run the motors. 
-        mtcr.input_and_control(self.start_value, self.end_value, self.step_value, self.interval)
-
-        # # switching tab to data tab
-        # self.navigation_tab_widget.setCurrentIndex(2)
-        
-        
-        # self.thread = QThread()
-        # self.worker = Worker(parent=self)
-        # self.worker.asx.connect(self.updateit)
-        # # self.stop_signal.connect(self.worker.stop)  # connect stop signal to worker stop method
-        # # self.worker.moveToThread(self.thread)
-
-        # # self.thread.started.connect(lambda: self.worker.do_work(self.navigation_tab_widget, self.acc_x_value_lbl))
-        # # self.worker.finished.connect(self.thread.quit)  # connect the workers finished signal to stop thread
-        # # self.worker.finished.connect(self.worker.deleteLater)  # connect the workers finished signal to clean up worker
-        # # self.thread.finished.connect(self.thread.deleteLater)  # connect threads finished signal to clean up thread
-
-        # # self.thread.finished.connect(self.worker.stop)
-        # self.thread.start()
-
-    def stop_pod(self):
-        self.stop_signal.emit()
 
     def reportProgress(self, n, b, p, r):
         self.navigation_tab_widget.setCurrentIndex(2)
@@ -206,52 +93,198 @@ class Ui_MainWindow(QMainWindow):
         self.rpm_value_lbl.setText(str(r))
 
     def setupUi(self):
+        
+        # BASIC WIDGET STUFF
+        # -----------------------------------------------------------------------------------------------------
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
+        
         self.MainFrame = QtWidgets.QFrame(self.centralwidget)
         self.MainFrame.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.MainFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.MainFrame.setFrameShadow(QtWidgets.QFrame.Raised)
-        self.MainFrame.setObjectName("MainFrame")
+        # -----------------------------------------------------------------------------------------------------
+
+
+        # PROGRESS BAR
+        # -----------------------------------------------------------------------------------------------------
         self.progress_bar = QtWidgets.QProgressBar(self.MainFrame)
         self.progress_bar.setGeometry(QtCore.QRect(270, 620, 1600, 31))
         self.progress_bar.setProperty("value", 24)
         self.progress_bar.setObjectName("progress_bar")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        
+        
+        # DATA FIELDS
+        # -----------------------------------------------------------------------------------------------------
         self.data_fields_list_widget = QtWidgets.QListWidget(self.MainFrame)
         self.data_fields_list_widget.setGeometry(QtCore.QRect(0, 49, 250, 1031))
         self.data_fields_list_widget.setObjectName("data_fields_list_widget")
+        
+        self.data_field_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.data_field_lbl.setGeometry(QtCore.QRect(0, 10, 251, 31))
+        font = QtGui.QFont()
+        font.setPointSize(20)
+        self.data_field_lbl.setFont(font)
+        self.data_field_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.data_field_lbl.setObjectName("data_field_lbl")
+        
+        # This is how you add new items. Follow these 4 lines given here for each new item. 
+        
         item = QtWidgets.QListWidgetItem()
         self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
-        item = QtWidgets.QListWidgetItem()
-        self.data_fields_list_widget.addItem(item)
+        item.setText("Some Text")
+        item = self.data_fields_list_widget.item(0)
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # ACCELERATION GRAPH
+        # -----------------------------------------------------------------------------------------------------
         self.acc_graph_frame = QtWidgets.QFrame(self.MainFrame)
         self.acc_graph_frame.setGeometry(QtCore.QRect(1150, 80, 711, 171))
         self.acc_graph_frame.setStyleSheet("background-color: rgb(153, 193, 241);")
         self.acc_graph_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.acc_graph_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.acc_graph_frame.setObjectName("acc_graph_frame")
+
+
+        self.acc_graph_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.acc_graph_lbl.setGeometry(QtCore.QRect(1340, 20, 371, 51))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.acc_graph_lbl.setFont(font)
+        self.acc_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.acc_graph_lbl.setObjectName("acc_graph_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        # VELOCITY GRAPH
+        # -----------------------------------------------------------------------------------------------------
         self.velo_graph_frame = QtWidgets.QFrame(self.MainFrame)
         self.velo_graph_frame.setGeometry(QtCore.QRect(1150, 350, 711, 171))
         self.velo_graph_frame.setStyleSheet("background-color: rgb(143, 240, 164);")
         self.velo_graph_frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.velo_graph_frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.velo_graph_frame.setObjectName("velo_graph_frame")
+
+
+        self.velo_graph_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.velo_graph_lbl.setGeometry(QtCore.QRect(1330, 280, 371, 51))
+        font = QtGui.QFont()
+        font.setPointSize(18)
+        self.velo_graph_lbl.setFont(font)
+        self.velo_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.velo_graph_lbl.setObjectName("velo_graph_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # DIALS / GAUGES 
+        # -----------------------------------------------------------------------------------------------------
+        
+        # CURRENT --------------------------------------------------------------
         self.current_dial = QtWidgets.QDial(self.MainFrame)
         self.current_dial.setGeometry(QtCore.QRect(560, 80, 241, 181))
         self.current_dial.setObjectName("current_dial")
+
+        self.current_val_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.current_val_lbl.setGeometry(QtCore.QRect(640, 120, 81, 71))
+        
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(20)
+        self.current_val_lbl.setFont(font)
+        self.current_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.current_val_lbl.setWordWrap(True)
+        self.current_val_lbl.setObjectName("current_val_lbl")
+        self.current_unit_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.current_unit_lbl.setGeometry(QtCore.QRect(640, 170, 81, 21))
+        
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        self.current_unit_lbl.setFont(font)
+        self.current_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.current_unit_lbl.setObjectName("current_unit_lbl")
+        
+        self.current_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.current_lbl.setGeometry(QtCore.QRect(600, 20, 161, 41))
+        font = QtGui.QFont()
+        font.setPointSize(22)
+        self.current_lbl.setFont(font)
+        self.current_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.current_lbl.setObjectName("current_lbl")
+        # ----------------------------------------------------------- 
+        
+        # ACCELERATION -----------------------------------------------------------
         self.acc_dial = QtWidgets.QDial(self.MainFrame)
         self.acc_dial.setGeometry(QtCore.QRect(290, 270, 361, 311))
         self.acc_dial.setObjectName("acc_dial")
+        
+        self.acc_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.acc_lbl.setGeometry(QtCore.QRect(340, 210, 251, 51))
+        font = QtGui.QFont()
+        font.setPointSize(22)
+        self.acc_lbl.setFont(font)
+        self.acc_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.acc_lbl.setObjectName("acc_lbl")
+        
+        self.acc_unit_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.acc_unit_lbl.setGeometry(QtCore.QRect(410, 440, 111, 31))
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(22)
+        self.acc_unit_lbl.setFont(font)
+        self.acc_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.acc_unit_lbl.setObjectName("acc_unit_lbl")
+        self.acc_val_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.acc_val_lbl.setGeometry(QtCore.QRect(400, 350, 141, 111))
+        
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(35)
+        self.acc_val_lbl.setFont(font)
+        self.acc_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.acc_val_lbl.setWordWrap(True)
+        self.acc_val_lbl.setObjectName("acc_val_lbl")
+        # -----------------------------------------------------------
+        
+        # VELOCITY  -----------------------------------------------------------
+        self.velo_dial = QtWidgets.QDial(self.MainFrame)
+        self.velo_dial.setGeometry(QtCore.QRect(700, 270, 361, 311))
+        self.velo_dial.setObjectName("velo_dial")
+        self.velo_val_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.velo_val_lbl.setGeometry(QtCore.QRect(810, 350, 141, 111))
+        
+        self.velo_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.velo_lbl.setGeometry(QtCore.QRect(760, 210, 251, 51))
+        font = QtGui.QFont()
+        font.setPointSize(22)
+        self.velo_lbl.setFont(font)
+        self.velo_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.velo_lbl.setObjectName("velo_lbl")
+        
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(35)
+        self.velo_val_lbl.setFont(font)
+        self.velo_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.velo_val_lbl.setWordWrap(True)
+        self.velo_val_lbl.setObjectName("velo_val_lbl")
+        self.velo_unit_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.velo_unit_lbl.setGeometry(QtCore.QRect(820, 440, 111, 31))
+        
+        font = QtGui.QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(22)
+        self.velo_unit_lbl.setFont(font)
+        self.velo_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.velo_unit_lbl.setObjectName("velo_unit_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # TEMPERATURE DATA FIELDS
+        # -----------------------------------------------------------------------------------------------------
+        
         self.temp_val_lbl_1 = QtWidgets.QLabel(self.MainFrame)
         self.temp_val_lbl_1.setGeometry(QtCore.QRect(590, 730, 241, 41))
         self.temp_val_lbl_1.setObjectName("temp_val_lbl_1")
@@ -277,6 +310,11 @@ class Ui_MainWindow(QMainWindow):
         self.temp_lbl.setFont(font)
         self.temp_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.temp_lbl.setObjectName("temp_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # PRESSURE DATA FIELDS
+        # -----------------------------------------------------------------------------------------------------
         self.pres_val_lbl_2 = QtWidgets.QLabel(self.MainFrame)
         self.pres_val_lbl_2.setGeometry(QtCore.QRect(860, 770, 241, 41))
         self.pres_val_lbl_2.setObjectName("pres_val_lbl_2")
@@ -302,24 +340,31 @@ class Ui_MainWindow(QMainWindow):
         self.pres_val_lbl_4 = QtWidgets.QLabel(self.MainFrame)
         self.pres_val_lbl_4.setGeometry(QtCore.QRect(860, 850, 241, 41))
         self.pres_val_lbl_4.setObjectName("pres_val_lbl_4")
+        # -----------------------------------------------------------------------------------------------------
+        
+        # ACTUATOR BOX
+        # -----------------------------------------------------------------------------------------------------
+        red_color = "background-color: rgb(246, 97, 81);"
+        green_color = "background-color: rgb(143, 240, 164);"
+        
         self.actuator_box_1 = QtWidgets.QLabel(self.MainFrame)
         self.actuator_box_1.setGeometry(QtCore.QRect(310, 720, 91, 81))
-        self.actuator_box_1.setStyleSheet("background-color: rgb(246, 97, 81);")
+        self.actuator_box_1.setStyleSheet(red_color) # This is how you set the color
         self.actuator_box_1.setText("")
         self.actuator_box_1.setObjectName("actuator_box_1")
         self.actuator_box_2 = QtWidgets.QLabel(self.MainFrame)
         self.actuator_box_2.setGeometry(QtCore.QRect(410, 720, 91, 81))
-        self.actuator_box_2.setStyleSheet("background-color: rgb(246, 97, 81);")
+        self.actuator_box_2.setStyleSheet(red_color) 
         self.actuator_box_2.setText("")
         self.actuator_box_2.setObjectName("actuator_box_2")
         self.actuator_box_4 = QtWidgets.QLabel(self.MainFrame)
         self.actuator_box_4.setGeometry(QtCore.QRect(310, 810, 91, 81))
-        self.actuator_box_4.setStyleSheet("background-color: rgb(143, 240, 164);")
+        self.actuator_box_4.setStyleSheet(green_color)
         self.actuator_box_4.setText("")
         self.actuator_box_4.setObjectName("actuator_box_4")
         self.actuator_box_3 = QtWidgets.QLabel(self.MainFrame)
         self.actuator_box_3.setGeometry(QtCore.QRect(410, 810, 91, 81))
-        self.actuator_box_3.setStyleSheet("background-color: rgb(143, 240, 164);")
+        self.actuator_box_3.setStyleSheet(green_color)
         self.actuator_box_3.setText("")
         self.actuator_box_3.setObjectName("actuator_box_3")
         self.actuator_lbl = QtWidgets.QLabel(self.MainFrame)
@@ -329,38 +374,54 @@ class Ui_MainWindow(QMainWindow):
         self.actuator_lbl.setFont(font)
         self.actuator_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.actuator_lbl.setObjectName("actuator_lbl")
+        # -----------------------------------------------------------------------------------------------------
+
+        
+        # LAUNCH, BRAKE, ARM BUTTON
+        # -----------------------------------------------------------------------------------------------------
+        
+        # LAUNCH
         self.launch_btn = QtWidgets.QPushButton(self.MainFrame)
         self.launch_btn.setGeometry(QtCore.QRect(1150, 690, 261, 141))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.launch_btn.setFont(font)
         self.launch_btn.setObjectName("launch_btn")
+        
+        # BRAKE
         self.brake_btn = QtWidgets.QPushButton(self.MainFrame)
         self.brake_btn.setGeometry(QtCore.QRect(1150, 850, 591, 91))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.brake_btn.setFont(font)
         self.brake_btn.setObjectName("brake_btn")
+        
+        # ARM
         self.arm_btn = QtWidgets.QPushButton(self.MainFrame)
         self.arm_btn.setGeometry(QtCore.QRect(1480, 690, 251, 141))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.arm_btn.setFont(font)
         self.arm_btn.setObjectName("arm_btn")
-        self.current_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.current_lbl.setGeometry(QtCore.QRect(600, 20, 161, 41))
+        
+        # Power Slider
+        self.power_slider = QtWidgets.QSlider(self.MainFrame)
+        self.power_slider.setGeometry(QtCore.QRect(1760, 900, 131, 21))
+        self.power_slider.setOrientation(QtCore.Qt.Horizontal)
+        self.power_slider.setObjectName("power_slider")
+        self.power_lbl = QtWidgets.QLabel(self.MainFrame)
+        self.power_lbl.setGeometry(QtCore.QRect(1740, 860, 161, 31))
         font = QtGui.QFont()
-        font.setPointSize(22)
-        self.current_lbl.setFont(font)
-        self.current_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.current_lbl.setObjectName("current_lbl")
-        self.acc_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.acc_lbl.setGeometry(QtCore.QRect(340, 210, 251, 51))
-        font = QtGui.QFont()
-        font.setPointSize(22)
-        self.acc_lbl.setFont(font)
-        self.acc_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.acc_lbl.setObjectName("acc_lbl")
+        font.setPointSize(18)
+        self.power_lbl.setFont(font)
+        self.power_lbl.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.power_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.power_lbl.setObjectName("power_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # COMMUNICATION STATES AND LED
+        # -----------------------------------------------------------------------------------------------------
         self.comm_lbl = QtWidgets.QLabel(self.MainFrame)
         self.comm_lbl.setGeometry(QtCore.QRect(270, 910, 291, 31))
         font = QtGui.QFont()
@@ -368,89 +429,20 @@ class Ui_MainWindow(QMainWindow):
         self.comm_lbl.setFont(font)
         self.comm_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.comm_lbl.setObjectName("comm_lbl")
-        self.velo_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.velo_lbl.setGeometry(QtCore.QRect(760, 210, 251, 51))
-        font = QtGui.QFont()
-        font.setPointSize(22)
-        self.velo_lbl.setFont(font)
-        self.velo_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.velo_lbl.setObjectName("velo_lbl")
-        self.acc_graph_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.acc_graph_lbl.setGeometry(QtCore.QRect(1340, 20, 371, 51))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.acc_graph_lbl.setFont(font)
-        self.acc_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.acc_graph_lbl.setObjectName("acc_graph_lbl")
-        self.velo_grpah_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.velo_grpah_lbl.setGeometry(QtCore.QRect(1330, 280, 371, 51))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.velo_grpah_lbl.setFont(font)
-        self.velo_grpah_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.velo_grpah_lbl.setObjectName("velo_grpah_lbl")
         self.comm_status_radio_btn = QtWidgets.QRadioButton(self.MainFrame)
         self.comm_status_radio_btn.setGeometry(QtCore.QRect(360, 950, 148, 28))
         self.comm_status_radio_btn.setChecked(True)
         self.comm_status_radio_btn.setAutoExclusive(False)
         self.comm_status_radio_btn.setObjectName("comm_status_radio_btn")
-        self.current_val_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.current_val_lbl.setGeometry(QtCore.QRect(640, 120, 81, 71))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(20)
-        self.current_val_lbl.setFont(font)
-        self.current_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.current_val_lbl.setWordWrap(True)
-        self.current_val_lbl.setObjectName("current_val_lbl")
-        self.current_unit_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.current_unit_lbl.setGeometry(QtCore.QRect(640, 170, 81, 21))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        self.current_unit_lbl.setFont(font)
-        self.current_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.current_unit_lbl.setObjectName("current_unit_lbl")
-        self.acc_unit_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.acc_unit_lbl.setGeometry(QtCore.QRect(410, 440, 111, 31))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(22)
-        self.acc_unit_lbl.setFont(font)
-        self.acc_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.acc_unit_lbl.setObjectName("acc_unit_lbl")
-        self.acc_val_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.acc_val_lbl.setGeometry(QtCore.QRect(400, 350, 141, 111))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(35)
-        self.acc_val_lbl.setFont(font)
-        self.acc_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.acc_val_lbl.setWordWrap(True)
-        self.acc_val_lbl.setObjectName("acc_val_lbl")
-        self.velo_dial = QtWidgets.QDial(self.MainFrame)
-        self.velo_dial.setGeometry(QtCore.QRect(700, 270, 361, 311))
-        self.velo_dial.setObjectName("velo_dial")
-        self.velo_val_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.velo_val_lbl.setGeometry(QtCore.QRect(810, 350, 141, 111))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(35)
-        self.velo_val_lbl.setFont(font)
-        self.velo_val_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.velo_val_lbl.setWordWrap(True)
-        self.velo_val_lbl.setObjectName("velo_val_lbl")
-        self.velo_unit_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.velo_unit_lbl.setGeometry(QtCore.QRect(820, 440, 111, 31))
-        font = QtGui.QFont()
-        font.setFamily("Segoe UI")
-        font.setPointSize(22)
-        self.velo_unit_lbl.setFont(font)
-        self.velo_unit_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.velo_unit_lbl.setObjectName("velo_unit_lbl")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # STATUS LEDS as RADIO BUTTONS
+        # -----------------------------------------------------------------------------------------------------
         self.status_radio_btn_2 = QtWidgets.QRadioButton(self.MainFrame)
         self.status_radio_btn_2.setGeometry(QtCore.QRect(1300, 950, 148, 28))
         self.status_radio_btn_2.setCheckable(True)
-        self.status_radio_btn_2.setChecked(False)
+        self.status_radio_btn_2.setChecked(True) # This is how you check them, or make them appear ON. 
         self.status_radio_btn_2.setAutoRepeat(False)
         self.status_radio_btn_2.setAutoExclusive(False)
         self.status_radio_btn_2.setObjectName("status_radio_btn_2")
@@ -470,24 +462,23 @@ class Ui_MainWindow(QMainWindow):
         self.status_radio_btn_4.setChecked(True)
         self.status_radio_btn_4.setAutoExclusive(False)
         self.status_radio_btn_4.setObjectName("status_radio_btn_4")
+        self.status_radio_btn_5 = QtWidgets.QRadioButton(self.MainFrame)
+        self.status_radio_btn_5.setGeometry(QtCore.QRect(1760, 950, 148, 28))
+        self.status_radio_btn_5.setChecked(True)
+        self.status_radio_btn_5.setAutoExclusive(False)
+        self.status_radio_btn_5.setObjectName("status_radio_btn_5")
+        # -----------------------------------------------------------------------------------------------------
+        
+        
+        # SPIN AND CHECK BOXES
+        # -----------------------------------------------------------------------------------------------------
         self.spin_box_1 = QtWidgets.QSpinBox(self.MainFrame)
         self.spin_box_1.setGeometry(QtCore.QRect(1300, 550, 75, 32))
         self.spin_box_1.setObjectName("spin_box_1")
         self.spin_box_2 = QtWidgets.QSpinBox(self.MainFrame)
         self.spin_box_2.setGeometry(QtCore.QRect(1770, 550, 75, 32))
         self.spin_box_2.setObjectName("spin_box_2")
-        self.power_slider = QtWidgets.QSlider(self.MainFrame)
-        self.power_slider.setGeometry(QtCore.QRect(1760, 900, 131, 21))
-        self.power_slider.setOrientation(QtCore.Qt.Horizontal)
-        self.power_slider.setObjectName("power_slider")
-        self.power_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.power_lbl.setGeometry(QtCore.QRect(1740, 860, 161, 31))
-        font = QtGui.QFont()
-        font.setPointSize(18)
-        self.power_lbl.setFont(font)
-        self.power_lbl.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.power_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.power_lbl.setObjectName("power_lbl")
+        
         self.spin_box_2_lbl = QtWidgets.QLabel(self.MainFrame)
         self.spin_box_2_lbl.setGeometry(QtCore.QRect(1610, 550, 161, 31))
         self.spin_box_2_lbl.setLayoutDirection(QtCore.Qt.LeftToRight)
@@ -498,20 +489,23 @@ class Ui_MainWindow(QMainWindow):
         self.spin_box_1_lbl.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.spin_box_1_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.spin_box_1_lbl.setObjectName("spin_box_1_lbl")
+        
+        
         self.checkbox_1 = QtWidgets.QCheckBox(self.MainFrame)
         self.checkbox_1.setGeometry(QtCore.QRect(1150, 650, 141, 28))
         self.checkbox_1.setObjectName("checkbox_1")
         self.checkbox_2 = QtWidgets.QCheckBox(self.MainFrame)
         self.checkbox_2.setGeometry(QtCore.QRect(1490, 650, 151, 28))
         self.checkbox_2.setObjectName("checkbox_2")
+        # -----------------------------------------------------------------------------------------------------
+        
+        # ERRORS 
+        # -----------------------------------------------------------------------------------------------------
         self.error_val_lbl = QtWidgets.QLabel(self.MainFrame)
         self.error_val_lbl.setGeometry(QtCore.QRect(1760, 680, 111, 111))
         font = QtGui.QFont()
         font.setFamily("Segoe UI")
         font.setPointSize(55)
-        font.setBold(False)
-        font.setItalic(False)
-        font.setUnderline(False)
         font.setWeight(50)
         self.error_val_lbl.setFont(font)
         self.error_val_lbl.setStyleSheet("color: rgb(237, 51, 59);")
@@ -525,18 +519,10 @@ class Ui_MainWindow(QMainWindow):
         self.error_lbl.setFont(font)
         self.error_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.error_lbl.setObjectName("error_lbl")
-        self.status_radio_btn_5 = QtWidgets.QRadioButton(self.MainFrame)
-        self.status_radio_btn_5.setGeometry(QtCore.QRect(1760, 950, 148, 28))
-        self.status_radio_btn_5.setChecked(True)
-        self.status_radio_btn_5.setAutoExclusive(False)
-        self.status_radio_btn_5.setObjectName("status_radio_btn_5")
-        self.data_field_lbl = QtWidgets.QLabel(self.MainFrame)
-        self.data_field_lbl.setGeometry(QtCore.QRect(0, 10, 251, 31))
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.data_field_lbl.setFont(font)
-        self.data_field_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.data_field_lbl.setObjectName("data_field_lbl")
+        # -----------------------------------------------------------------------------------------------------
+
+        # RANDOM BUTTONS
+        # -----------------------------------------------------------------------------------------------------
         self.random_btn_1 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_1.setGeometry(QtCore.QRect(1150, 980, 154, 32))
         self.random_btn_1.setObjectName("random_btn_1")
@@ -549,6 +535,9 @@ class Ui_MainWindow(QMainWindow):
         self.random_btn_4 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_4.setGeometry(QtCore.QRect(1730, 980, 154, 32))
         self.random_btn_4.setObjectName("random_btn_4")
+        # -----------------------------------------------------------------------------------------------------
+
+
 
         self.setCentralWidget(self.centralwidget)
         self.retranslateUi()
@@ -559,20 +548,8 @@ class Ui_MainWindow(QMainWindow):
         self.setWindowTitle(_translate("self", "NEW POD GUI"))
         __sortingEnabled = self.data_fields_list_widget.isSortingEnabled()
         self.data_fields_list_widget.setSortingEnabled(False)
-        item = self.data_fields_list_widget.item(0)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(1)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(2)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(3)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(4)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(5)
-        item.setText(_translate("self", "New Item"))
-        item = self.data_fields_list_widget.item(6)
-        item.setText(_translate("self", "New Item"))
+        # item = self.data_fields_list_widget.item(0)
+        # item.setText(_translate("self", "New Item 0"))
         self.data_fields_list_widget.setSortingEnabled(__sortingEnabled)
         self.temp_val_lbl_1.setText(_translate("self", "Temperature Value 1"))
         self.temp_val_lbl_2.setText(_translate("self", "Temperature Value 2"))
@@ -597,7 +574,7 @@ class Ui_MainWindow(QMainWindow):
         self.comm_lbl.setText(_translate("self", "Communication State"))
         self.velo_lbl.setText(_translate("self", "Velocity"))
         self.acc_graph_lbl.setText(_translate("self", "Acceleration Time Curve"))
-        self.velo_grpah_lbl.setText(_translate("self", "Velocity Time Curve"))
+        self.velo_graph_lbl.setText(_translate("self", "Velocity Time Curve"))
         self.comm_status_radio_btn.setText(_translate("self", "Status"))
         self.current_val_lbl.setText(_translate("self", "23.52"))
         self.current_unit_lbl.setText(_translate("self", "mA"))
