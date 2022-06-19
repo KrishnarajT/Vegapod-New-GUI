@@ -11,27 +11,47 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import QThread, QObject, pyqtSignal
 import time
 from datetime import datetime
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+from random import randint
 
+
+red_color = "background-color: rgb(246, 97, 81);"
+green_color = "background-color: rgb(143, 240, 164);"
 
 
 class Worker(QObject):
-    finished = pyqtSignal()
-    # progress = pyqtSignal(list, list, float, int)
-    gimme_values = pyqtSignal()
+    finished_1 = pyqtSignal()
+    progress_1 = pyqtSignal(int)
+    finished_2 = pyqtSignal()
+    progress_2 = pyqtSignal()
 
-    def __init__(self, direction_text, step_val, end_val, interval_val):
+    def __init__(self):
         super().__init__()
         # Basic variables can be defined here. 
 
-    def run(self):
-        
-        # self.progress.emit(accel_data, gyro_data, pressure_data, rpm_data)
-        time.sleep(0.1)                   
-        self.finished.emit()
+    def function_thread_1(self):
+        # This will just run everything for demo purposes. 
+        for i in range(60):
+            print('running the task')
+            time.sleep(0.1)
+            self.progress_1.emit(i)
+        self.finished_1.emit()
 
-    def stop_immediately(self):
-        print('breaking. ')
-        self.finished.emit()
+
+    def function_thread_2(self):
+        
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(50)
+        self.timer.timeout.connect(self.progress_2.emit)
+        self.timer.start()
+        
+        # for i in range(5):
+        #     print('running the task')
+        #     time.sleep(1)
+        #     self.progress_2.emit(i)
+        # self.finished_2.emit()
+
 
 class Ui_MainWindow(QMainWindow): 
        
@@ -41,56 +61,147 @@ class Ui_MainWindow(QMainWindow):
         self.resize(1920, 1080)
         self.setupUi()
 
-    def runLongTask(self):
-        
+    def runLongTask_with_thread_1(self):
         # Create a QThread object
         self.thread = QThread()
         
         # Create a worker object
-        self.worker = Worker(self.direction_combo_box.currentText(), int(self.step_value_line_edit.text()),\
-            int(self.end_value_line_edit.text()), int(self.interval_line_edit.text()))
+        self.worker = Worker()
         
         # Move worker to the thread
         self.worker.moveToThread(self.thread)
         
         # Connect signals and slots
-        self.thread.started.connect(self.worker.run)
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.started.connect(self.worker.function_thread_1)
+        self.worker.finished_1.connect(self.thread.quit)
+        self.worker.finished_1.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.reportProgress)
-        self.worker.gimme_values.connect(self.give_val)
-        self.stop_signal.connect(self.worker.stop_immediately)
+        self.worker.progress_1.connect(self.reportProgress_thread_1)
+        # self.worker.gimme_values.connect(self.give_val)
+        # self.stop_signal.connect(self.worker.stop_immediately)
         
         # Start the thread
         self.thread.start()
-
+        
+        self.random_btn_1.setEnabled(False)
+        
         # Final resets
-        # self.longRunningBtn.setEnabled(False)
-        # self.thread.finished.connect(
-        #     lambda: self.longRunningBtn.setEnabled(True)
-        # )
-        # self.thread.finished.connect(
-        #     lambda: self.stepLabel.setText("Long-Running Step: 0")
-        # )
-    
-    def stop_thread(self):
-        self.stop_signal.emit()
-    
-    def give_val(self):
-        return 1
+        self.thread.finished.connect(
+            lambda: self.random_btn_1.setEnabled(True)
+        )       
 
-    def reportProgress(self, n, b, p, r):
-        self.navigation_tab_widget.setCurrentIndex(2)
-        self.step_value_lbl.setText(f"Long-Running Step: {n[0]}")
-        self.gyro_x_value_lbl.setText(str(round(n[0], 3)))
-        self.gyro_y_value_lbl.setText(str(round(n[1], 3)))
-        self.gyro_z_value_lbl.setText(str(round(n[2], 3)))        
-        self.acc_x_value_lbl.setText(str(round(b[0], 3)))
-        self.acc_y_value_lbl.setText(str(round(b[1], 3)))
-        self.acc_z_value_lbl.setText(str(round(b[2], 3))) 
-        self.pressure_value_lbl.setText(str(p))
-        self.rpm_value_lbl.setText(str(r))
+    def reportProgress_thread_1(self, i):
+        print('reported from thread one', i)
+        if i % 2 == 0:
+            self.actuator_box_1.setStyleSheet(green_color)
+            self.actuator_box_2.setStyleSheet(red_color)
+            self.actuator_box_3.setStyleSheet(green_color)
+            self.actuator_box_4.setStyleSheet(red_color)
+            self.progress_bar.setValue(i*5)
+            self.acc_dial.setValue(i*2)
+            self.velo_dial.setValue(i*4)
+            self.current_dial.setValue(i*3)
+            self.comm_status_radio_btn.setChecked(False)
+            self.status_radio_btn_1.setChecked(True)
+            self.status_radio_btn_2.setChecked(False)
+            self.status_radio_btn_3.setChecked(True)
+            self.status_radio_btn_4.setChecked(False)
+            self.status_radio_btn_5.setChecked(True)
+            self.checkbox_1.setChecked(True)
+            self.checkbox_2.setChecked(False)
+            
+        elif i == 3: 
+            self.error_val_lbl.setText("03")            
+            
+        else: 
+            self.actuator_box_1.setStyleSheet(red_color)
+            self.actuator_box_2.setStyleSheet(green_color)
+            self.actuator_box_3.setStyleSheet(red_color)
+            self.actuator_box_4.setStyleSheet(green_color)
+            self.progress_bar.setValue(i*5)
+            self.acc_dial.setValue(i*2)
+            self.velo_dial.setValue(i*4)
+            self.current_dial.setValue(i*3)
+            self.comm_status_radio_btn.setChecked(True)
+            self.status_radio_btn_1.setChecked(False)
+            self.status_radio_btn_2.setChecked(True)
+            self.status_radio_btn_3.setChecked(False)
+            self.status_radio_btn_4.setChecked(True)
+            self.status_radio_btn_5.setChecked(False)
+            self.checkbox_1.setChecked(False)
+            self.checkbox_2.setChecked(True)
+
+    def runLongTask_with_thread_2(self):
+        # Create a QThread object
+        self.thread_2 = QThread()
+        
+        # Create a worker object
+        self.worker_2 = Worker()
+        
+        # Move worker to the thread
+        self.worker_2.moveToThread(self.thread_2)
+        
+        # Connect signals and slots
+        self.thread_2.started.connect(self.worker_2.function_thread_2)
+        self.worker_2.finished_2.connect(self.thread_2.quit)
+        self.worker_2.finished_2.connect(self.worker_2.deleteLater)
+        self.thread_2.finished.connect(self.thread_2.deleteLater)
+        self.worker_2.progress_2.connect(self.update_plot_data)
+        # self.worker_2.gimme_values.connect(self.give_val)
+        # self.stop_signal.connect(self.worker_2.stop_immediately)
+        
+        # Start the thread_2
+        self.thread_2.start()
+        self.random_btn_2.setEnabled(False)
+        
+        # Final resets
+        self.thread_2.finished.connect(
+            lambda: self.random_btn_2.setEnabled(True)
+        )
+        
+        self.graphWidget = pg.PlotWidget()
+        # self.setCentralWidget(self.graphWidget)
+        self.graphWidget.setParent(self.acc_graph_frame)
+
+        self.x = list(range(100))  # 100 time points
+        self.y = [randint(0,100) for _ in range(100)]  # 100 data points
+
+        self.graphWidget.setBackground('w')
+
+        pen = pg.mkPen(color=(255, 0, 0))
+        self.data_line =  self.graphWidget.plot(self.x, self.y, pen=pen)
+        
+        
+    def reportProgress_thread_2(self, i):
+        print('Reported Progress from two', i)
+
+    def makegraph(self):
+        self.graphWidget = pg.PlotWidget(self.acc_graph_frame)
+        self.setCentralWidget(self.graphWidget)
+        self.x = list(range(100))  # 100 time points
+        self.y = [randint(0,100) for _ in range(100)]  # 100 data points
+
+        self.graphWidget.setBackground('w')
+
+        pen = pg.mkPen(color=(255, 0, 0))
+        self.data_line =  self.graphWidget.plot(self.x, self.y, pen=pen)
+        # self.data_line.setGeometry(0, 0, 100, 100)
+        self.timer = QtCore.QTimer()
+        self.timer.setInterval(50)
+        self.timer.timeout.connect(self.update_plot_data)
+        self.timer.start()
+
+
+    def update_plot_data(self):
+    
+        self.x = self.x[1:]  # Remove the first y element.
+        self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
+
+        self.y = self.y[1:]  # Remove the first
+        self.y.append( randint(0,100))  # Add a new random value.
+
+        self.data_line.setData(self.x, self.y)  # Update the data.
+
 
     def setupUi(self):
         
@@ -526,12 +637,19 @@ class Ui_MainWindow(QMainWindow):
         self.random_btn_1 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_1.setGeometry(QtCore.QRect(1150, 980, 154, 32))
         self.random_btn_1.setObjectName("random_btn_1")
+        self.random_btn_1.clicked.connect(self.runLongTask_with_thread_1)
+        
         self.random_btn_2 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_2.setGeometry(QtCore.QRect(1350, 980, 154, 32))
         self.random_btn_2.setObjectName("random_btn_2")
+        self.random_btn_2.clicked.connect(self.runLongTask_with_thread_2)
+
+        
         self.random_btn_3 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_3.setGeometry(QtCore.QRect(1540, 980, 154, 32))
         self.random_btn_3.setObjectName("random_btn_3")
+        self.random_btn_3.clicked.connect(self.makegraph)
+        
         self.random_btn_4 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_4.setGeometry(QtCore.QRect(1730, 980, 154, 32))
         self.random_btn_4.setObjectName("random_btn_4")
@@ -595,9 +713,10 @@ class Ui_MainWindow(QMainWindow):
         self.error_lbl.setText(_translate("self", "Error"))
         self.status_radio_btn_5.setText(_translate("self", "Status 5"))
         self.data_field_lbl.setText(_translate("self", "Data Fields"))
-        self.random_btn_1.setText(_translate("self", "Button 1"))
-        self.random_btn_2.setText(_translate("self", "Button 2"))
-        self.random_btn_3.setText(_translate("self", "Button 3"))
-        self.random_btn_4.setText(_translate("self", "Button 4"))
+        self.random_btn_1.setText(_translate("self", "Demo"))
+        self.random_btn_2.setText(_translate("self", "Graph"))
+        self.random_btn_3.setText(_translate("self", "Add Field"))
+        self.random_btn_4.setText(_translate("self", "Dials"))
 
 
+ 

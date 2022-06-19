@@ -1,0 +1,1135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1920</width>
+    <height>1080</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QFrame" name="MainFrame">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>1920</width>
+      <height>1080</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QProgressBar" name="progress_bar">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>620</y>
+       <width>1600</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>24</number>
+     </property>
+    </widget>
+    <widget class="QListWidget" name="data_fields_list_widget">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>49</y>
+       <width>250</width>
+       <height>1031</height>
+      </rect>
+     </property>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>New Item</string>
+      </property>
+     </item>
+    </widget>
+    <widget class="QFrame" name="acc_graph_frame">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>80</y>
+       <width>711</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(153, 193, 241);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QFrame" name="velo_graph_frame">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>350</y>
+       <width>711</width>
+       <height>171</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(143, 240, 164);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+    </widget>
+    <widget class="QDial" name="current_dial">
+     <property name="geometry">
+      <rect>
+       <x>560</x>
+       <y>80</y>
+       <width>241</width>
+       <height>181</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QDial" name="acc_dial">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>270</y>
+       <width>361</width>
+       <height>311</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_1">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>730</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_2">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>770</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_3">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>810</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_4">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>850</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 4</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_5">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>890</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 5</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_val_lbl_6">
+     <property name="geometry">
+      <rect>
+       <x>590</x>
+       <y>930</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Temperature Value 6</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="temp_lbl">
+     <property name="geometry">
+      <rect>
+       <x>570</x>
+       <y>670</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Temperature</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_2">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>770</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pressure_lbl">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>670</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Pressure</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_3">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>810</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 3</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_5">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>890</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 5</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_1">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>730</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 1</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_6">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>930</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 6</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pres_val_lbl_4">
+     <property name="geometry">
+      <rect>
+       <x>860</x>
+       <y>850</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Pressure Value 4</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="actuator_box_1">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>720</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(246, 97, 81);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="actuator_box_2">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>720</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(246, 97, 81);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="actuator_box_4">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>810</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(246, 97, 81);
+background-color: rgb(143, 240, 164);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="actuator_box_3">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>810</y>
+       <width>91</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(143, 240, 164);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="actuator_lbl">
+     <property name="geometry">
+      <rect>
+       <x>290</x>
+       <y>670</y>
+       <width>241</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Actuator States</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="launch_btn">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>690</y>
+       <width>261</width>
+       <height>141</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Launch</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="brake_btn">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>850</y>
+       <width>591</width>
+       <height>91</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Brake</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="arm_btn">
+     <property name="geometry">
+      <rect>
+       <x>1480</x>
+       <y>690</y>
+       <width>251</width>
+       <height>141</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Arm</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="current_lbl">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>20</y>
+       <width>161</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Current</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="acc_lbl">
+     <property name="geometry">
+      <rect>
+       <x>340</x>
+       <y>210</y>
+       <width>251</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Acceleration</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="comm_lbl">
+     <property name="geometry">
+      <rect>
+       <x>270</x>
+       <y>910</y>
+       <width>291</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Communication State</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="velo_lbl">
+     <property name="geometry">
+      <rect>
+       <x>760</x>
+       <y>210</y>
+       <width>251</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Velocity</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="acc_graph_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1340</x>
+       <y>20</y>
+       <width>371</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Acceleration Time Curve</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="velo_grpah_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1330</x>
+       <y>280</y>
+       <width>371</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Velocity Time Curve</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="comm_status_radio_btn">
+     <property name="geometry">
+      <rect>
+       <x>360</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="current_val_lbl">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>120</y>
+       <width>81</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>23.52</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="current_unit_lbl">
+     <property name="geometry">
+      <rect>
+       <x>640</x>
+       <y>170</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+      </font>
+     </property>
+     <property name="text">
+      <string>mA</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="acc_unit_lbl">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>440</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>m/s/s</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="acc_val_lbl">
+     <property name="geometry">
+      <rect>
+       <x>400</x>
+       <y>350</y>
+       <width>141</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>35</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>11.12</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QDial" name="velo_dial">
+     <property name="geometry">
+      <rect>
+       <x>700</x>
+       <y>270</y>
+       <width>361</width>
+       <height>311</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="velo_val_lbl">
+     <property name="geometry">
+      <rect>
+       <x>810</x>
+       <y>350</y>
+       <width>141</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>35</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>49.22</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="velo_unit_lbl">
+     <property name="geometry">
+      <rect>
+       <x>820</x>
+       <y>440</y>
+       <width>111</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>22</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>m/s</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="status_radio_btn_2">
+     <property name="geometry">
+      <rect>
+       <x>1300</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status 2</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>false</bool>
+     </property>
+     <property name="autoRepeat">
+      <bool>false</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="status_radio_btn_3">
+     <property name="geometry">
+      <rect>
+       <x>1460</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status 3</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="status_radio_btn_1">
+     <property name="geometry">
+      <rect>
+       <x>1160</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status 1</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="status_radio_btn_4">
+     <property name="geometry">
+      <rect>
+       <x>1610</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status 4</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spin_box_1">
+     <property name="geometry">
+      <rect>
+       <x>1300</x>
+       <y>550</y>
+       <width>75</width>
+       <height>32</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spin_box_2">
+     <property name="geometry">
+      <rect>
+       <x>1770</x>
+       <y>550</y>
+       <width>75</width>
+       <height>32</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QSlider" name="power_slider">
+     <property name="geometry">
+      <rect>
+       <x>1760</x>
+       <y>900</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="power_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1740</x>
+       <y>860</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Power</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="spin_box_2_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1610</x>
+       <y>550</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Set Value</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="spin_box_1_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1130</x>
+       <y>550</y>
+       <width>161</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>Counter Val 1</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkbox_1">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>650</y>
+       <width>141</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Check box 1</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkbox_2">
+     <property name="geometry">
+      <rect>
+       <x>1490</x>
+       <y>650</y>
+       <width>151</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Check Box 2</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="error_val_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1760</x>
+       <y>680</y>
+       <width>111</width>
+       <height>111</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>55</pointsize>
+       <weight>50</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+       <underline>false</underline>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(237, 51, 59);</string>
+     </property>
+     <property name="text">
+      <string>04</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QLabel" name="error_lbl">
+     <property name="geometry">
+      <rect>
+       <x>1750</x>
+       <y>780</y>
+       <width>141</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Segoe UI</family>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Error</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QRadioButton" name="status_radio_btn_5">
+     <property name="geometry">
+      <rect>
+       <x>1760</x>
+       <y>950</y>
+       <width>148</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Status 5</string>
+     </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="data_field_lbl">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>10</y>
+       <width>251</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Data Fields</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="random_btn_1">
+     <property name="geometry">
+      <rect>
+       <x>1150</x>
+       <y>980</y>
+       <width>154</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Button 1</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="random_btn_2">
+     <property name="geometry">
+      <rect>
+       <x>1350</x>
+       <y>980</y>
+       <width>154</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Button 2</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="random_btn_3">
+     <property name="geometry">
+      <rect>
+       <x>1540</x>
+       <y>980</y>
+       <width>154</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Button 3</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="random_btn_4">
+     <property name="geometry">
+      <rect>
+       <x>1730</x>
+       <y>980</y>
+       <width>154</width>
+       <height>32</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Button 4</string>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
