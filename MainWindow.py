@@ -1,60 +1,113 @@
+####################################################################
+# This is the GUI for Vegapod's New Pod.
+# Base Code by KrishnarajT
+# Base Repo on https://www.github.com/KrishnarajT/Vegapod-New-Gui.git
+# Made in PyQt5 
 
 
 
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5 import QtWidgets
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-import sys, os
-from PyQt5 import QtGui
-from PyQt5.QtGui import QPixmap
-from PyQt5.QtCore import QThread, QObject, pyqtSignal
-import time
+# Importing Basic Modules
+import sys, os, time
 from datetime import datetime
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph as pg
 from random import randint
 
+# Importing PyQt5 Modules
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
+from PyQt5 import QtGui
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import QThread, QObject, pyqtSignal
 
+# Defining color css for Actuator States. If you wanna change the color, then just change the RGB Values here. 
 red_color = "background-color: rgb(246, 97, 81);"
 green_color = "background-color: rgb(143, 240, 164);"
 
 
+### MULTITHREADING ###
+'''
+The Basic Way of working is explained in as brief as possible here. 
+So the reason you need multithreading is that in a GUI, code has to be run to check how the user is interacting with the UI. And if you run something on the backend
+Then the GUI wont respond to the user coz its busy running that backend code. To avoid this we use different threads. 
+
+Now you can do this with python's multithreading module, or Qt's personal threads. 
+In this case Qt's threads are better, as they are more integrated. 
+
+
+So you basically have a worker class. That class has certain functions. 
+To communicate with that class, you create a worker object, To give values
+to that object, you will just give the values the moment the class is defined in its 
+constructor. 
+
+To send values from this worker class to your main GUI class to display, you need
+to send a signal. And there needs to be a slot in ur GUI class to receive that signal. This system of signals and slots is what multithreading in GUI is reliant on. 
+
+What we will do essentially, is that on press of a button or some trigger, 
+you can call a function that creats a new thread, and then gives necessary variables
+to the backend worker class to run its code. You then have to connect the signals and
+slots to certain functions. Then we just call the function from the worker class, 
+which then runs simultaineously as ur GUI. After doing that task, it returns a value
+via the signal and slot, and upon catching that value you can call another function
+in your main class, that will show the necessary changes in your GUI.
+
+'''
+
+
+
 class Worker(QObject):
+    """
+    # This is the class that runs threads. Most of your code will be here. There are functions in this that are going to be executed as threads run. 
+    # For an example, 2 functions are given, both of which will do some task based on the thread that you call them with. 
+    """
+    
+    
+    # Defining signals. 
     finished_1 = pyqtSignal()
-    progress_1 = pyqtSignal(int)
+    progress_1 = pyqtSignal(int) # you can have anything as a parameter. 
+    
+    # Defining Signals for second thread. 
     finished_2 = pyqtSignal()
-    progress_2 = pyqtSignal()
+    progress_2 = pyqtSignal(int)
 
     def __init__(self):
         super().__init__()
         # Basic variables can be defined here. 
 
     def function_thread_1(self):
-        # This will just run everything for demo purposes. 
+        '''
+        This function will be executed upon making the first thread. 
+        It just runs a for loop 60 times after .1 seconds. After each iteration
+        it calls a function to update some stuff on the GUI. This is the demo. 
+        '''
         for i in range(60):
-            print('running the task')
+            print('running Demo')
             time.sleep(0.1)
-            self.progress_1.emit(i)
+            # this step is important, coz ur communicating value of i to the GUI. 
+            self.progress_1.emit(i) # emitting a signal
+            
+        # Sending a signal that this thread's task is complete. 
         self.finished_1.emit()
 
 
+
     def function_thread_2(self):
-        
-        self.timer = QtCore.QTimer()
-        self.timer.setInterval(50)
-        self.timer.timeout.connect(self.progress_2.emit)
-        self.timer.start()
-        
-        # for i in range(5):
-        #     print('running the task')
-        #     time.sleep(1)
-        #     self.progress_2.emit(i)
-        # self.finished_2.emit()
+        '''
+        This function just runs some random loop. More DEMO. 
+        '''        
+
+        for i in range(5):
+            print('running the task')
+            time.sleep(1)
+            self.progress_2.emit(i)
+        self.finished_2.emit()
 
 
 class Ui_MainWindow(QMainWindow): 
-       
+    """
+    Main GUI Class. Everything is defined and done here. 
+    """
     def __init__(self):
         super().__init__()
         self.setObjectName("NEW POD GUI")
@@ -62,6 +115,11 @@ class Ui_MainWindow(QMainWindow):
         self.setupUi()
 
     def runLongTask_with_thread_1(self):
+        '''
+        A function to create and manage the first thread. 
+        It calls the function from the worker class.         
+        '''
+        
         # Create a QThread object
         self.thread = QThread()
         
@@ -76,9 +134,8 @@ class Ui_MainWindow(QMainWindow):
         self.worker.finished_1.connect(self.thread.quit)
         self.worker.finished_1.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress_1.connect(self.reportProgress_thread_1)
-        # self.worker.gimme_values.connect(self.give_val)
-        # self.stop_signal.connect(self.worker.stop_immediately)
+        self.worker.progress_1.connect(self.reportProgress_thread_1) # this is the function that is called every time the worker calss emits something (line 88)
+
         
         # Start the thread
         self.thread.start()
@@ -91,6 +148,14 @@ class Ui_MainWindow(QMainWindow):
         )       
 
     def reportProgress_thread_1(self, i):
+        '''
+        This is the function that runs when the worker class function emits 
+        or reports some progress to this class. Its the function that updates ur GUI
+        And therefore a very important function. 
+        '''
+        
+        ### !DEMO CODE on updating stuff on the GUI. ### 
+        
         print('reported from thread one', i)
         if i % 2 == 0:
             self.actuator_box_1.setStyleSheet(green_color)
@@ -146,7 +211,7 @@ class Ui_MainWindow(QMainWindow):
         self.worker_2.finished_2.connect(self.thread_2.quit)
         self.worker_2.finished_2.connect(self.worker_2.deleteLater)
         self.thread_2.finished.connect(self.thread_2.deleteLater)
-        self.worker_2.progress_2.connect(self.update_plot_data)
+        self.worker_2.progress_2.connect(self.reportProgress_thread_2)
         # self.worker_2.gimme_values.connect(self.give_val)
         # self.stop_signal.connect(self.worker_2.stop_immediately)
         
@@ -158,34 +223,43 @@ class Ui_MainWindow(QMainWindow):
         self.thread_2.finished.connect(
             lambda: self.random_btn_2.setEnabled(True)
         )
-        
-        
+      
     def reportProgress_thread_2(self, i):
         print('Reported Progress from two', i)
 
-    def makegraph(self):
-        pass
-
-
-
     def gen_Graph(self):
+        '''
+        Starts a timer, and on an interval of 50 ms updates the graph. 
+        Im assuming this timer thing creats a thread of its own and manages it on its own. 
+        but not sure.
+        '''
         self.timer = QtCore.QTimer()
         self.timer.setInterval(50)
         self.timer.timeout.connect(self.update_plot_data)
         self.timer.start()
         
-        
     def update_plot_data(self):
+        '''
+        Updates the graph by changing the values of x and y. 
+        If you are changing the values, then this is where you should 
+        either get the values from the sensor or from a csv file. 
+        '''
     
+    
+        # Updating data for the Velocity Graph
+        # -------------------------------------------------------------------------
         self.x = self.x[1:]  # Remove the first y element.
         self.x.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
 
         self.y = self.y[1:]  # Remove the first
         self.y.append( randint(0,100))  # Add a new random value.
 
-        self.cur_data_line.setData(self.x, self.y)  # Update the data.
+        self.velo_data_line.setData(self.x, self.y)  # Update the data.
+        # -------------------------------------------------------------------------
 
 
+        # Updating data for Acceleration Graph. 
+        # -------------------------------------------------------------------------
         # self.x1 = self.x1[1:]  # Remove the first y element.
         self.x1.append(self.x[-1] + 1)  # Add a new value 1 higher than the last.
 
@@ -193,68 +267,75 @@ class Ui_MainWindow(QMainWindow):
         self.y1.append( randint(0,100))  # Add a new random value.
 
         self.acc_data_line.setData(self.x1, self.y1)  # Update the data.
+        # -------------------------------------------------------------------------
 
     def setupUi(self):
+        '''
+        This is the function that defines all the widgets. 
+        Other than connecting functions, and changing the graph,
+        most of the stuff here is GUI related and better left without messing with.         
+        '''
         
         # BASIC WIDGET STUFF
         # -----------------------------------------------------------------------------------------------------
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         
-        #       self.centralwidget = QtWidgets.QWidget(self)
-        # self.centralwidget.setObjectName("centralwidget")
+        # Defining the Basic Tab        
         self.navigation_tab_widget = QtWidgets.QTabWidget(self.centralwidget)
         self.navigation_tab_widget.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
-        # self.navigation_tab_widget.setStyleSheet("background-color: #DDDDDD")
         self.navigation_tab_widget.setObjectName("navigation_tab_widget")
         
-        self.inputs_tab = QtWidgets.QWidget()
-        self.inputs_tab.setObjectName("inputs_tab")
-        self.navigation_tab_widget.addTab(self.inputs_tab, "")
+        # Defining Tabs
+        self.dashboard_tab = QtWidgets.QWidget()
+        self.dashboard_tab.setObjectName("dashboard_tab")
+        self.navigation_tab_widget.addTab(self.dashboard_tab, "")
 
         self.graph_tab = QtWidgets.QWidget()
         self.graph_tab.setObjectName("graph_tab")
         self.navigation_tab_widget.addTab(self.graph_tab, "")
         
-        self.layoutWidget_3 = QtWidgets.QWidget(self.graph_tab)
-        self.layoutWidget_3.setGeometry(QtCore.QRect(0, 0, 1920, 1000))
-        self.layoutWidget_3.setObjectName("layoutWidget_3")
+        # Creating a layout for graphs. 
+        self.layout_widget = QtWidgets.QWidget(self.graph_tab)
+        self.layout_widget.setGeometry(QtCore.QRect(0, 0, 1920, 1000))
+        self.layout_widget.setObjectName("layout_widget")
         
-        self.vertical_layout = QtWidgets.QVBoxLayout(self.layoutWidget_3)
+        # Adding vertical Layout to graphs. 
+        self.vertical_layout = QtWidgets.QVBoxLayout(self.layout_widget)
         self.vertical_layout.setContentsMargins(50, 0, 50, 50)
         self.vertical_layout.setObjectName("vertical_layout")
         
-        self.current_graph_lbl = QtWidgets.QLabel(self.layoutWidget_3)
-        self.current_graph_lbl.setGeometry(QtCore.QRect(0, 0, 50, 50))
+        # Creating Current graph and Acceleration Graph widgets. 
         font = QtGui.QFont()
         font.setPointSize(22)
-        self.current_graph_lbl.setFont(font)
-        self.current_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
-        self.current_graph_lbl.setObjectName("current_graph_lbl")
-        self.current_graph_lbl.setText("Current Live Graph")
+        self.velo_graph_lbl = QtWidgets.QLabel(self.layout_widget)
+        self.velo_graph_lbl.setGeometry(QtCore.QRect(0, 0, 50, 50))
+        self.velo_graph_lbl.setFont(font)
+        self.velo_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
+        self.velo_graph_lbl.setObjectName("velo_graph_lbl")
+        self.velo_graph_lbl.setText("Current Live Graph")
         
-        self.acc_graph_lbl = QtWidgets.QLabel(self.layoutWidget_3)
+        # Creating Current graph and Acceleration Graph widgets. 
+        self.acc_graph_lbl = QtWidgets.QLabel(self.layout_widget)
         self.acc_graph_lbl.setGeometry(QtCore.QRect(0, 0, 50, 50))
-        font = QtGui.QFont()
-        font.setPointSize(22)
         self.acc_graph_lbl.setFont(font)
         self.acc_graph_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.acc_graph_lbl.setObjectName("acc_graph_lbl")
         self.acc_graph_lbl.setText("Acceleration Live Graph")
         
 
+        # Creating the Graph
         
-        
-        
-        self.current_graph_pg_widget = pg.PlotWidget()
+        self.velo_graph_pg_widget = pg.PlotWidget()
 
+        # Demo Data
         self.x = list(range(100))  # 100 time points
         self.y = [randint(0,100) for _ in range(100)]  # 100 data points
 
-        self.current_graph_pg_widget.setBackground('w')
-
-        pen = pg.mkPen(color=(255, 0, 0))
-        self.cur_data_line =  self.current_graph_pg_widget.plot(self.x, self.y, pen=pen)
+        self.velo_graph_pg_widget.setBackground('black')
+        self.velo_graph_pg_widget.showGrid(True, True)
+        pen_1 = pg.mkPen(color='#11c2c4', width=2)
+        self.velo_data_line =  self.velo_graph_pg_widget.plot(self.x, self.y, pen=pen_1)
         
         self.acc_graph_pg_widget = pg.PlotWidget()
         self.vertical_layout.addWidget(self.acc_graph_pg_widget)
@@ -262,20 +343,19 @@ class Ui_MainWindow(QMainWindow):
         self.x1 = list(range(100))  # 100 time points
         self.y1 = [randint(0,50) for _ in range(100)]  # 100 data points
 
-        self.acc_graph_pg_widget.setBackground('w')
+        self.acc_graph_pg_widget.setBackground('black')
+        self.acc_graph_pg_widget.showGrid(True, True)
+        pen_2 = pg.mkPen(color='#ec8734', width = 2)
+        self.acc_data_line =  self.acc_graph_pg_widget.plot(self.x1, self.y1, pen=pen_2)
+        
 
-        pen = pg.mkPen(color=(255, 0, 0))
-        self.acc_data_line =  self.acc_graph_pg_widget.plot(self.x1, self.y1, pen=pen)
-
-
-        self.vertical_layout.addWidget(self.current_graph_lbl)
-        self.vertical_layout.addWidget(self.current_graph_pg_widget)
+        
+        self.vertical_layout.addWidget(self.velo_graph_lbl)
+        self.vertical_layout.addWidget(self.velo_graph_pg_widget)
         self.vertical_layout.addWidget(self.acc_graph_lbl)
         self.vertical_layout.addWidget(self.acc_graph_pg_widget)
 
-
-        
-        self.MainFrame = QtWidgets.QFrame(self.inputs_tab)
+        self.MainFrame = QtWidgets.QFrame(self.dashboard_tab)
         self.MainFrame.setGeometry(QtCore.QRect(0, 0, 1920, 1080))
         self.MainFrame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.MainFrame.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -289,7 +369,6 @@ class Ui_MainWindow(QMainWindow):
         self.progress_bar.setProperty("value", 24)
         self.progress_bar.setObjectName("progress_bar")
         # -----------------------------------------------------------------------------------------------------
-        
         
         
         
@@ -668,13 +747,13 @@ class Ui_MainWindow(QMainWindow):
         self.random_btn_2 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_2.setGeometry(QtCore.QRect(1350, 820, 154, 32))
         self.random_btn_2.setObjectName("random_btn_2")
-        self.random_btn_2.clicked.connect(self.runLongTask_with_thread_2)
+        self.random_btn_2.clicked.connect(self.gen_Graph)
 
         
         self.random_btn_3 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_3.setGeometry(QtCore.QRect(1540, 820, 154, 32))
         self.random_btn_3.setObjectName("random_btn_3")
-        self.random_btn_3.clicked.connect(self.gen_Graph)
+        self.random_btn_3.clicked.connect(self.runLongTask_with_thread_2)
         
         self.random_btn_4 = QtWidgets.QPushButton(self.MainFrame)
         self.random_btn_4.setGeometry(QtCore.QRect(1730, 820, 154, 32))
@@ -694,7 +773,7 @@ class Ui_MainWindow(QMainWindow):
         self.data_fields_list_widget.setSortingEnabled(False)
         # item = self.data_fields_list_widget.item(0)
         # item.setText(_translate("self", "New Item 0"))
-        self.navigation_tab_widget.setTabText(self.navigation_tab_widget.indexOf(self.inputs_tab), _translate("self", "Inputs"))
+        self.navigation_tab_widget.setTabText(self.navigation_tab_widget.indexOf(self.dashboard_tab), _translate("self", "Dashboard"))
         self.navigation_tab_widget.setTabText(self.navigation_tab_widget.indexOf(self.graph_tab), _translate("self", "Graphs"))
         self.data_fields_list_widget.setSortingEnabled(__sortingEnabled)
         self.temp_val_lbl_1.setText(_translate("self", "Temperature Value 1"))
