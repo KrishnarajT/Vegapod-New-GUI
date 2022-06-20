@@ -11,6 +11,8 @@ GUI for the new pod by Vegapod
 2. Run `python Source.py` and that should launch the GUI. 
 
 # Screenshots
+![](Screenshots/dashboard.gif)
+![](Screenshots/graph.gif)
 # DashBoard
 ![](Screenshots/dashboard.png)
 
