@@ -14,9 +14,7 @@ GUI for the new pod by Vegapod
 # Editing and Running
 1. Open the latest ui file in qt designer
 2. After editing, save the changes and navigate to where you saved the ui file and run: 
-```
-pyuic5 -x Vegapod_new_gui.ui -o _MainWindow.py                                                                                                              
-```
+`pyuic5 -x Vegapod_new_gui.ui -o _MainWindow.py`
 3. Paste the Code from paste_this.py into the resulting .py file. 
 4. Run `python Source.py` to run the code. 
 
